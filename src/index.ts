@@ -1,1 +1,3 @@
-console.log("Hello via Bun!");
+import QuickBotz from "./QuickBotz";
+
+export { QuickBotz }
