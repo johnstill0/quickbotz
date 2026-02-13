@@ -1,5 +1,5 @@
 import type { Client } from "discord.js";
 
-export interface EventContext {
+export interface Context {
   client: Client;
 }

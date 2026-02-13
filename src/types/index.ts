@@ -1,4 +1,5 @@
-import type QuickBotzOptions from "./QuickBotz";
-import type { EventContext } from "./EventContext";
+import type { QuickBotzOptions, SingleGuildConfig, MultiGuildConfig} from "./QuickBotzOptions";
+import type { Context } from "./Context";
+import type CommandOptions from "./CommandOptions";
 
-export type { QuickBotzOptions, EventContext }
+export type { QuickBotzOptions, Context, CommandOptions }
