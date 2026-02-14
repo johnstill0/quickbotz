@@ -1,3 +1,4 @@
 import QuickBotz from "./QuickBotz";
+import type { Context } from "./types";
 
-export { QuickBotz }
+export { QuickBotz, type Context }

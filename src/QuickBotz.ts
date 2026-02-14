@@ -57,25 +57,47 @@ class QuickBotz {
 
   #setupInteractionHandler = () => {
     this.client.on(Events.InteractionCreate, async (interaction) => {
-      try {
-        if (interaction.isChatInputCommand()) {
-          const command: CommandOptions = this.commands.get(interaction.commandName);
-          if (!command ) {
-            interaction.reply({ content: `This command cannot be found.`, flags: MessageFlags.Ephemeral});
-            return
-          };
+      if (interaction.isChatInputCommand()) {
+        const command: CommandOptions = this.commands.get(
+          interaction.commandName,
+        );
 
-          if (interaction.isAutocomplete()) {
-            return await command.autocomplete?.(this.ctx, interaction)
+        if (!command) {
+          return await interaction.reply({
+            content: `This command cannot be found.`,
+            flags: MessageFlags.Ephemeral,
+          });
+        }
+
+        if (interaction.isAutocomplete() && command.autocomplete) {
+          try {
+            await command.autocomplete(this.ctx, interaction);
+          } catch (error) {
+            console.error(error);
+          }
+          return;
+        }
+
+        try {
+          await command.execute(this.ctx, interaction);
+        } catch (error) {
+          console.error(error);
+          const content = "There was an error while executing this command";
+          if (interaction.replied || interaction.deferred) {
+            return await interaction.followUp({
+              content,
+              flags: MessageFlags.Ephemeral,
+            });
           }
 
-          return await command.execute(this.ctx, interaction)
+          await interaction.reply({
+            content,
+            flags: MessageFlags.Ephemeral,
+          });
         }
-      } catch (error) {
-         console.error("Error in base interaction create", error);
       }
-    })
-  }
+    });
+  };
 
   #deployCommands = async () => {
     const commandsToRegister = this.commands.map((cmd) => cmd.data.toJSON());
@@ -114,7 +136,7 @@ class QuickBotz {
     await this.#deployCommands();
     this.#setupInteractionHandler();
     this.client.login(this.#config.token);
-    console.log(`(⚡) QuickBotz Initialized Successfully`)
+    console.log(`(⚡) QuickBotz Initialized Successfully`);
   };
 }
 

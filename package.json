@@ -1,6 +1,13 @@
 {
   "name": "quickbotz",
+  "version": "0.0.1",
+  "files": ["dist"],
+  "scripts": {
+    "build": "bun build ./src/index.ts --outdir ./dist --target node"
+  },
+  "description": "A simple yet powerful discord bot framework to build discord bots easier & faster",
   "module": "src/index.ts",
+  "license": "MIT",
   "type": "module",
   "private": true,
   "devDependencies": {
