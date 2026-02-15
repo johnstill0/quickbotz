@@ -2,7 +2,7 @@
   "name": "quickbotz",
   "main": "dist/index.mjs",
   "types": "dist/index.d.mts",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "files": [
     "dist"
   ],
