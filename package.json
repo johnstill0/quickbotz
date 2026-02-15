@@ -1,20 +1,21 @@
 {
   "name": "quickbotz",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/index.mjs",
+  "types": "dist/index.d.mts",
   "version": "0.0.3",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsdown"
   },
   "description": "A simple yet powerful discord bot framework to build discord bots easier & faster",
   "module": "src/index.ts",
   "license": "MIT",
   "type": "module",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "tsdown": "^0.20.3"
   },
   "peerDependencies": {
     "typescript": "^5"
