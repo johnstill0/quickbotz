@@ -1,6 +1,15 @@
 {
   "name": "quickbotz",
   "main": "dist/index.mjs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/johnstill0/quickbotz"
+  },
+  "author": "John Steel",
+  "bugs": {
+    "url": "https://github.com/johnstill0/quickbotz/issues"
+  },
+  "homepage": "https://github.com/johnstill0/quickbotz#README",
   "types": "dist/index.d.mts",
   "version": "0.0.5",
   "files": [
