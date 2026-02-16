@@ -32,15 +32,15 @@ import { SlashCommandBuilder, GatewayIntentBits, Events } from "discord.js";
 const bot = QuickBotz.single({
   token: process.env.DISCORD_TOKEN!,
   intents: [GatewayIntentBits.Guilds],
-  clientId: process.env.CLIENT_ID,
-  guildId: process.env.GUILD_ID,
+  clientId: process.env.CLIENT_ID!,
+  guildId: process.env.GUILD_ID!,
 });
 
 // Multi-guild bot (alternative)
 // const bot = QuickBotz.multi({
 //   token: process.env.DISCORD_TOKEN!,
 //   intents: [GatewayIntentBits.Guilds],
-//   clientId: process.env.CLIENT_ID,
+//   clientId: process.env.CLIENT_ID!,
 // });
 
 bot.registerEvent(Events.ClientReady, false, async (ctx, client) => {

@@ -8,7 +8,7 @@ import {
   type ClientEvents,
   type RESTPostAPIApplicationCommandsResult,
 } from "discord.js";
-import type { CommandOptions, Context, QuickBotzOptions } from "./types";
+import type { Command, Event, Context, QuickBotzOptions } from "./types";
 import type {
   MultiGuildConfig,
   SingleGuildConfig,
@@ -37,30 +37,28 @@ class QuickBotz {
     return new QuickBotz({ ...config, mode: "single" });
   }
 
-  registerEvent = <K extends keyof ClientEvents>(
-    event: K,
+  registerEvent = <T extends keyof ClientEvents>(
+    event: T,
     once: boolean = false,
-    callback: (ctx: Context, ...args: ClientEvents[K]) => void | Promise<void>,
+    callback: (ctx: Context, ...args: ClientEvents[T]) => void | Promise<void>,
   ) => {
     once
-      ? this.client.once(event, (...args: ClientEvents[K]) => {
+      ? this.client.once(event, (...args: ClientEvents[T]) => {
           return callback(this.ctx, ...args);
         })
-      : this.client.on(event, (...args: ClientEvents[K]) => {
+      : this.client.on(event, (...args: ClientEvents[T]) => {
           return callback(this.ctx, ...args);
         });
   };
 
-  registerCommand({ data, execute, autocomplete }: CommandOptions) {
+  registerCommand({ data, execute, autocomplete }: Command) {
     this.commands.set(data.name, { data, execute, autocomplete });
   }
 
   #setupInteractionHandler = () => {
     this.client.on(Events.InteractionCreate, async (interaction) => {
       if (interaction.isChatInputCommand()) {
-        const command: CommandOptions = this.commands.get(
-          interaction.commandName,
-        );
+        const command: Command = this.commands.get(interaction.commandName);
 
         if (!command) {
           return await interaction.reply({
