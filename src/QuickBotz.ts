@@ -36,18 +36,17 @@ class QuickBotz {
   static single(config: Omit<SingleGuildConfig, "mode">) {
     return new QuickBotz({ ...config, mode: "single" });
   }
-
-  registerEvent = <T extends keyof ClientEvents>(
-    event: T,
-    once: boolean = false,
-    callback: (ctx: Context, ...args: ClientEvents[T]) => void | Promise<void>,
-  ) => {
+  registerEvent = <T extends keyof ClientEvents>({
+    name,
+    once,
+    execute,
+  }: Event<T>) => {
     once
-      ? this.client.once(event, (...args: ClientEvents[T]) => {
-          return callback(this.ctx, ...args);
+      ? this.client.once(name, (...args) => {
+          return execute(this.ctx, ...args);
         })
-      : this.client.on(event, (...args: ClientEvents[T]) => {
-          return callback(this.ctx, ...args);
+      : this.client.on(name, (...args) => {
+          return execute(this.ctx, ...args);
         });
   };
 
