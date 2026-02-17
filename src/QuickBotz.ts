@@ -8,7 +8,13 @@ import {
   type ClientEvents,
   type RESTPostAPIApplicationCommandsResult,
 } from "discord.js";
-import type { Command, Event, Context, QuickBotzOptions } from "./types";
+import type {
+  Action,
+  Command,
+  Context,
+  Event,
+  QuickBotzOptions,
+} from "./types";
 import type {
   MultiGuildConfig,
   SingleGuildConfig,
@@ -17,13 +23,15 @@ import type {
 class QuickBotz {
   public client: Client;
   public ctx: Context;
-  public commands: Collection<string, any>;
+  public commands: Collection<string, Command>;
+  public actions: Collection<string, Action>;
   #config: QuickBotzOptions;
 
   private constructor(config: QuickBotzOptions) {
     this.#config = config;
     this.client = new Client({ intents: config.intents });
     this.commands = new Collection();
+    this.actions = new Collection();
     this.ctx = {
       client: this.client,
     };
@@ -50,6 +58,10 @@ class QuickBotz {
         });
   };
 
+  registerAction({ name, execute }: Action) {
+    this.actions.set(name, { name, execute });
+  }
+
   registerCommand({ data, execute, autocomplete }: Command) {
     this.commands.set(data.name, { data, execute, autocomplete });
   }
@@ -57,7 +69,9 @@ class QuickBotz {
   #setupInteractionHandler = () => {
     this.client.on(Events.InteractionCreate, async (interaction) => {
       if (interaction.isChatInputCommand()) {
-        const command: Command = this.commands.get(interaction.commandName);
+        const command: Command | undefined = this.commands.get(
+          interaction.commandName,
+        );
 
         if (!command) {
           return await interaction.reply({
@@ -91,6 +105,17 @@ class QuickBotz {
             content,
             flags: MessageFlags.Ephemeral,
           });
+        }
+      }
+      // Handle other interaction types (e.g., buttons, select menus) here if needed
+      if ("customId" in interaction) {
+        const action = this.actions.get(interaction.customId);
+        if (action) {
+          try {
+            await action.execute(this.ctx, interaction);
+          } catch (error) {
+            console.error(error);
+          }
         }
       }
     });
